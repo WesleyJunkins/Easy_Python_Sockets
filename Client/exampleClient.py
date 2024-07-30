@@ -18,8 +18,8 @@ handlers = {
 # Include the value of the host, port, and the handlers object you just created.
 # Beyond this, the client is running.
 myNewClient = ws_client("localhost", 3000, handlers)
-myNewClient.set_list_mode(False)
-myNewClient.set_debug_mode(False)
+myNewClient.set_list_mode(True)
+myNewClient.set_debug_mode(True)
 
 # Step 3: write code to interact with a server.
 async def send_messages():

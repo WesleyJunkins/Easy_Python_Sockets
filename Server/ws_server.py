@@ -11,6 +11,7 @@ class ws_server:
         self.debugMode = False
         self.listMode = False
         self.probeMode = False
+        self.dummyBool = False
         self.probeInterval = 10  # in seconds
         self.refreshID = str(uuid.uuid4())
         self.clientList = []
@@ -21,14 +22,14 @@ class ws_server:
         }
         self.defaultHandlers = {
             "client_request_connect": self.client_request_connect,
-            "client_return_probe": self.client_return_probe
+            "client_return_probe": self.client_return_probe,
+            "server_probe": self.server_probe
         }
         self.connected_clients = set()
 
     async def start_server(self):
         self.server = await serve(self.handler, "localhost", self.server_port)
-        if self.debugMode:
-            print(f"[Server] Created a Web Socket server on port {self.server_port}.")
+        print(f"[Server] Created a WebSocket server on port {self.server_port}.")
         if self.probeMode:
             asyncio.create_task(self.probe_clients())
         await asyncio.Future()  # Run forever
@@ -113,6 +114,9 @@ class ws_server:
         updateClientIndex = next((i for i, client in enumerate(self.clientList) if client['id'] == str(m['params']['id']).strip()), None)
         if updateClientIndex is not None:
             self.clientList[updateClientIndex]['refreshID'] = self.refreshID
+
+    async def server_probe(self, m):
+        self.dummyBool = True
 
     async def probe_clients(self):
         while True:

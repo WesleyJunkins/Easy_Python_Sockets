@@ -10,6 +10,7 @@ class ws_client:
         self.handlers = handlers
         self.debugMode = False
         self.listMode = False
+        self.dummyBool = False
         self.refreshID = str(uuid.uuid4())
         self.clientID = {
             'id': str(uuid.uuid4()),
@@ -19,7 +20,8 @@ class ws_client:
         }
         self.defaultHandlers = {
             "server_accepted_connect": self.server_accepted_connect,
-            "server_probe": self.server_probe
+            "server_probe": self.server_probe,
+            "client_request_connect": self.client_request_connect
         }
         self.websocket = None
 
@@ -82,6 +84,9 @@ class ws_client:
                 'id': self.clientID['id'],
                 'serverID': m['params']['id']
             })
+    
+    async def client_request_connect(self, m):
+        self.dummyBool = True
 
     def set_debug_mode(self, debugMode):
         self.debugMode = debugMode
